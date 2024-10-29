@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="#">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+
+    class App extends React.Component {
+        constructor() {
+            console.log("构造函数被调用");
+
+            super();
+            this.state = {
+                pokemons: ["皮卡丘", "杰尼龟", "小火龙"],
+                egg: "蛋蛋老师",
+            }
+        }
+
+        componentDidMount() {
+            console.log("组件挂载完成");
+
+            fetch('https://pokeapi.co/api/v2/pokemon?limit=10')
+                .then(res => res.json())
+                .then(json => {
+                    this.setState(
+                        () => {
+                            return {pokemons: json.results};
+                        },
+                        () => {
+                            console.log(this.state)
+                        });
+                    console.log(this.state);
+                });
+        }
+
+        render() {
+            console.log("渲染函数被调用");
+
+            return (<div>
+                <h1>宝可梦</h1>
+                <input type="search" placeholder="请输入宝可梦名称"/>
+                <ul>
+                    {
+                        this.state.pokemons.map((pokemon, index) => <li key={pokemon.url}>{pokemon.name}</li>)
+                    }
+                </ul>
+            </div>);
+        }
+    }
+
+    root.render(<App/>);
+</script>
+</body>
+</html>
